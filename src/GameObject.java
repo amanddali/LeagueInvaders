@@ -18,6 +18,6 @@ public class GameObject {
 	}
 
 	public void draw(Graphics g) {
-		g.fillRect(10, 10, 100, 100);
+
 	}
 }
