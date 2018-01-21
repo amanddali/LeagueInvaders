@@ -17,11 +17,23 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	int currentState = MENU_STATE;
 	Font titleFont;
 	Font smallerFont;
+	Rocketship rs;
+	boolean moveRight;
+	boolean moveLeft;
+	boolean moveUp;
+	boolean moveDown;
+	ObjectManager om;
 
 	GamePanel() {
 		timer = new Timer(1000 / 60, this);
 		titleFont = new Font("Oswald", Font.BOLD, 48);
 		smallerFont = new Font("Oswald", Font.PLAIN, 30);
+		rs = new Rocketship(250, 700, 50, 50);
+		moveRight = false;
+		moveLeft = false;
+		moveUp = false;
+		moveDown = false;
+		om = new ObjectManager(rs);
 	}
 
 	public void startGame() {
@@ -30,7 +42,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		repaint();
 		if (currentState == MENU_STATE) {
 			updateMenuState();
@@ -54,26 +65,46 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("you ");
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("all ");
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState += 1;
 		}
 		if (currentState > END_STATE) {
 			currentState = MENU_STATE;
 		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			moveRight = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			moveLeft = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			moveUp = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			moveDown = true;
+		}
+		rs.update();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("suck!!");
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			moveRight = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			moveLeft = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			moveUp = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			moveDown = false;
+		}
 	}
 
 	public void updateMenuState() {
@@ -81,7 +112,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void updateGameState() {
-
+		if (moveRight == true) {
+			rs.x += rs.speed;
+		}
+		if (moveLeft == true) {
+			rs.x -= rs.speed;
+		}
+		if (moveUp == true) {
+			rs.y -= rs.speed;
+		}
+		if (moveDown == true) {
+			rs.y += rs.speed;
+		}
+		om.update();
 	}
 
 	public void updateEndState() {
@@ -102,6 +145,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void drawGameState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		om.draw(g);
 	}
 
 	public void drawEndState(Graphics g) {
