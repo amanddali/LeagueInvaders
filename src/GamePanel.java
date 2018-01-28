@@ -88,6 +88,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			moveDown = true;
 		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			om.addProjectile(new Projectiles(rs.x + 20, rs.y, 10, 10));
+		}
 		rs.update();
 	}
 
@@ -125,6 +128,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			rs.y += rs.speed;
 		}
 		om.update();
+		om.manageEnemies();
 	}
 
 	public void updateEndState() {
