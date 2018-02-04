@@ -115,10 +115,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void updateGameState() {
-		if (moveRight == true) {
+		if (moveRight == true && rs.x < 440) {
 			rs.x += rs.speed;
 		}
-		if (moveLeft == true) {
+		if (moveLeft == true && rs.x > 10) {
 			rs.x -= rs.speed;
 		}
 		if (moveUp == true) {
@@ -129,6 +129,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		om.update();
 		om.manageEnemies();
+		om.checkCollision();
+		om.purgeObjects();
 	}
 
 	public void updateEndState() {

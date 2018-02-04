@@ -5,14 +5,14 @@ import java.util.Random;
 public class ObjectManager {
 	Rocketship rs2;
 	ArrayList<Projectiles> prj;
-	ArrayList<Alien> alien;
+	ArrayList<Alien> alienList;
 	long enemyTimer;
 	int enemySpawnTime;
 
 	ObjectManager(Rocketship rs2) {
 		this.rs2 = rs2;
 		prj = new ArrayList<Projectiles>();
-		alien = new ArrayList<Alien>();
+		alienList = new ArrayList<Alien>();
 		enemyTimer = 0;
 		enemySpawnTime = 1000;
 	}
@@ -22,8 +22,8 @@ public class ObjectManager {
 		for (Projectiles projectile : prj) {
 			projectile.update();
 		}
-		for (Alien alien2 : alien) {
-			alien2.update();
+		for (Alien alien : alienList) {
+			alien.update();
 		}
 	}
 
@@ -32,8 +32,8 @@ public class ObjectManager {
 		for (Projectiles projectile : prj) {
 			projectile.draw(g);
 		}
-		for (Alien alien2 : alien) {
-			alien2.draw(g);
+		for (Alien alien : alienList) {
+			alien.draw(g);
 		}
 	}
 
@@ -42,7 +42,7 @@ public class ObjectManager {
 	}
 
 	public void addAlien(Alien alien) {
-
+		alienList.add(alien);
 	}
 
 	public void manageEnemies() {
@@ -52,10 +52,24 @@ public class ObjectManager {
 		}
 	}
 
+	public void checkCollision() {
+		for (Alien alien : alienList) {
+			if (rs2.collisionBox.intersects(alien.collisionBox)) {
+				rs2.isAlive = false;
+			}
+			for (Projectiles projectile : prj) {
+				if (alien.collisionBox.intersects(projectile.collisionBox)) {
+					alien.isAlive = false;
+					projectile.isAlive = false;
+				}
+			}
+		}
+	}
+
 	public void purgeObjects() {
-		for (Alien alien2 : alien) {
-			if (alien2.isAlive == false) {
-				alien.remove(alien2);
+		for (Alien alien : alienList) {
+			if (alien.isAlive == false) {
+				alienList.remove(alien);
 			}
 		}
 		for (Projectiles projectile : prj) {
