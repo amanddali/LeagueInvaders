@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -23,6 +25,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	boolean moveUp;
 	boolean moveDown;
 	ObjectManager om;
+	public static BufferedImage alienImg;
+	public static BufferedImage rocketImg;
+	public static BufferedImage bulletImg;
+	public static BufferedImage spaceImg;
 
 	GamePanel() {
 		timer = new Timer(1000 / 60, this);
@@ -34,6 +40,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		moveUp = false;
 		moveDown = false;
 		om = new ObjectManager(rs);
+		try {
+			alienImg = ImageIO.read(this.getClass().getResourceAsStream("alien.png"));
+			rocketImg = ImageIO.read(this.getClass().getResourceAsStream("rocket.png"));
+			bulletImg = ImageIO.read(this.getClass().getResourceAsStream("bullet.png"));
+			spaceImg = ImageIO.read(this.getClass().getResourceAsStream("space.png"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void startGame() {
@@ -72,6 +86,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState += 1;
+			if (currentState == END_STATE) {
+				rs = new Rocketship(250, 700, 50, 50);
+				om = new ObjectManager(rs);
+			}
 		}
 		if (currentState > END_STATE) {
 			currentState = MENU_STATE;
@@ -131,6 +149,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		om.manageEnemies();
 		om.checkCollision();
 		om.purgeObjects();
+		if (rs.isAlive == false) {
+			currentState = END_STATE;
+		}
 	}
 
 	public void updateEndState() {
@@ -149,9 +170,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void drawGameState(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
-		om.draw(g);
+		g.drawImage(GamePanel.spaceImg, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
 	}
 
 	public void drawEndState(Graphics g) {
@@ -161,7 +180,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLACK);
 		g.drawString("GAME OVER", 100, 200);
 		g.setFont(smallerFont);
-		g.drawString("you killed 0 enemies", 100, 400);
+		g.drawString("you killed " + om.getScore() + " enemies", 100, 400);
 		g.drawString("press ENTER to restart", 90, 600);
 
 	}

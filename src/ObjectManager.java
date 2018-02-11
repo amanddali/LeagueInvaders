@@ -8,6 +8,7 @@ public class ObjectManager {
 	ArrayList<Alien> alienList;
 	long enemyTimer;
 	int enemySpawnTime;
+	int score;
 
 	ObjectManager(Rocketship rs2) {
 		this.rs2 = rs2;
@@ -15,6 +16,7 @@ public class ObjectManager {
 		alienList = new ArrayList<Alien>();
 		enemyTimer = 0;
 		enemySpawnTime = 1000;
+		score = 0;
 	}
 
 	public void update() {
@@ -47,7 +49,7 @@ public class ObjectManager {
 
 	public void manageEnemies() {
 		if (System.currentTimeMillis() - enemyTimer >= enemySpawnTime) {
-			addAlien(new Alien(new Random().nextInt(LeagueInvaders.WIDTH), 0, 50, 50));
+			addAlien(new Alien(new Random().nextInt(LeagueInvaders.WIDTH - 20), 0, 50, 50));
 			enemyTimer = System.currentTimeMillis();
 		}
 	}
@@ -67,15 +69,20 @@ public class ObjectManager {
 	}
 
 	public void purgeObjects() {
-		for (Alien alien : alienList) {
-			if (alien.isAlive == false) {
-				alienList.remove(alien);
+		for (int i = 0; i < alienList.size(); i++) {
+			if (alienList.get(i).isAlive == false) {
+				alienList.remove(i);
+				score += 1;
 			}
 		}
-		for (Projectiles projectile : prj) {
-			if (projectile.isAlive == false) {
-				prj.remove(projectile);
+		for (int i = 0; i < prj.size(); i++) {
+			if (prj.get(i).isAlive == false) {
+				prj.remove(i);
 			}
 		}
+	}
+
+	int getScore() {
+		return this.score;
 	}
 }
