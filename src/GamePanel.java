@@ -171,6 +171,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void drawGameState(Graphics g) {
 		g.drawImage(GamePanel.spaceImg, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
+		om.draw(g);
 	}
 
 	public void drawEndState(Graphics g) {
