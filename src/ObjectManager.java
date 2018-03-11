@@ -47,6 +47,10 @@ public class ObjectManager {
 		alienList.add(alien);
 	}
 
+	public void addRocketship(Rocketship rs) {
+		this.rs2 = rs;
+	}
+
 	public void manageEnemies() {
 		if (System.currentTimeMillis() - enemyTimer >= enemySpawnTime) {
 			addAlien(new Alien(new Random().nextInt(LeagueInvaders.WIDTH - 20), 0, 50, 50));
@@ -80,6 +84,11 @@ public class ObjectManager {
 				prj.remove(i);
 			}
 		}
+	}
+
+	public void reset() {
+		prj.clear();
+		alienList.clear();
 	}
 
 	int getScore() {
